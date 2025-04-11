@@ -16,6 +16,6 @@ class PageInfo(BaseModel):
 
 class StandardResponse(BaseModel):
     success: bool
-    data: Optional[Any]
+    result: Optional[Any]
     error: Optional[ErrorModel]
     pageInfo: Optional[PageInfo]

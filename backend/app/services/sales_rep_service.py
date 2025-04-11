@@ -27,12 +27,12 @@ def load_sales_rep_data(query: str = None, limit: int = 5, offset: int = 0):
             ]
         
         total = len(sales_reps)
-        data = sales_reps[offset:offset+limit]
-        count = len(data)
+        result = sales_reps[offset:offset+limit]
+        count = len(result)
 
         return {
             "success": True,
-            "data": data,
+            "result": result,
             "error": None,
             "pageInfo": {
                 "limit": limit,
@@ -45,7 +45,7 @@ def load_sales_rep_data(query: str = None, limit: int = 5, offset: int = 0):
     except Exception as e:
         return {
             "success": False,
-            "data": None,
+            "result": None,
             "error": {
                 "message": str(e),
                 "code": "INTERNAL_SERVER_ERROR"
