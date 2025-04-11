@@ -10,7 +10,7 @@ export default function Home() {
     fetch("http://localhost:8000/api/sales-reps")
       .then((res) => res.json())
       .then((data) => {
-        setUsers(data.salesReps || []);
+        setUsers(data.data || []);
         setLoading(false);
       })
       .catch((err) => {

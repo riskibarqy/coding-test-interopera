@@ -1,17 +1,21 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Any, Optional
 
-class SalesRep(BaseModel):
-    name: str
-    role: str
-    region: str
-    skills: List[str]
-    deals: list
-    clients: list
 
-class PaginatedResponse(BaseModel):
-    total: int
-    count: int
+class ErrorModel(BaseModel):
+    message: str
+    code: str
+
+
+class PageInfo(BaseModel):
+    limit: int
     offset: int
-    limit: Optional[int]
-    data: List[SalesRep]
+    total: int
+    count:int
+
+
+class StandardResponse(BaseModel):
+    success: bool
+    data: Optional[Any]
+    error: Optional[ErrorModel]
+    pageInfo: Optional[PageInfo]

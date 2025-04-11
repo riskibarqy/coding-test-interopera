@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Request, Query
 from app.services.sales_rep_service import load_sales_rep_data
-from app.models.base import PaginatedResponse
+from app.models.base import StandardResponse
 
 router = APIRouter()
 
-@router.get("/api/sales-reps", response_model=PaginatedResponse)
+@router.get("/api/sales-reps", response_model=StandardResponse)
 def get_sales_reps(
         search: str = Query(None), 
         limit: int = Query(5), 
