@@ -28,7 +28,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/components/theme-provider.jsx", "src/components/mode-toggle.jsx"  ],
   "exclude": [
     "node_modules"
   ]
