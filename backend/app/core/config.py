@@ -1,4 +1,8 @@
+import os
+from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
+
+load_dotenv()
 
 def setup_cors(app):
     app.add_middleware(

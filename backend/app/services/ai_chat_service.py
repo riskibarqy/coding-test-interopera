@@ -1,6 +1,11 @@
+import os
 from openai import OpenAI
+from dotenv import load_dotenv
+load_dotenv()
 
-client = OpenAI(api_key="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")
+api_key = os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(api_key=api_key)
 
 def chat_with_ai(prompt: str):
     try:
