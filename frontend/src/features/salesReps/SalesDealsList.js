@@ -1,84 +1,41 @@
 import React from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/src/components/ui/table"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-} from "@/src/components/ui/pagination";
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 
-export default function SalesUserList({ pagedDeals, allDeals, dealPage, dealsPerPage, setDealPage }) {
-  if (!allDeals || allDeals.length === 0) {
-    return <p>No sales deals found.</p>;
+export default function DealsBarChart({ users }) {
+  if (!users || users.length === 0) {
+    return <p>No sales reps found.</p>;
   }
 
+  const chartData = users.map((user) => ({
+    name: user.name,
+    closedWon: user.deals
+      .filter((deal) => deal.status === "Closed Won")
+      .reduce((sum, deal) => sum + deal.value, 0),
+  }));
+
   return (
-    <>
-      <div>
-        <h2 className="text-xl font-bold mb-4">Deals</h2>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Rep</TableHead>
-              <TableHead>Client</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Value</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {pagedDeals.map((deal, i) => (
-              <TableRow key={`${deal.rep}-${i}`}>
-                <TableCell>{deal.rep}</TableCell>
-                <TableCell>{deal.client}</TableCell>
-                <TableCell>{deal.status}</TableCell>
-                <TableCell className="text-right">
-                  ${deal.value.toLocaleString()}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        {/* Pagination for Deals */}
-        <Pagination>
-          <PaginationContent className="justify-center mt-4">
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setDealPage((p) => Math.max(p - 1, 0))}
-                className={dealPage === 0 ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <span className="text-sm text-muted-foreground mt-1">
-                Page {dealPage + 1}
-              </span>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => {
-                  if ((dealPage + 1) * dealsPerPage < allDeals.length) {
-                    setDealPage((p) => p + 1);
-                  }
-                }}
-                className={
-                  (dealPage + 1) * dealsPerPage >= allDeals.length
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-    </>
-
+    <div>
+      <h2 className="text-xl font-bold mb-4">Closed Won Deals by Rep</h2>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart
+          data={chartData}
+          margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="closedWon" fill="#4f46e5" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

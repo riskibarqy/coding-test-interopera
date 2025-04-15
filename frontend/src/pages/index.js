@@ -13,10 +13,8 @@ export default function Home() {
   const [page, setPage] = useState(0);
   const limit = 10;
   const [input, setInput] = useState("");
+  const [inputAI, setInputAI] = useState("");
   const [debouncedSearch] = useDebounce(input, 500);
-  const [dealPage, setDealPage] = useState(0);
-  const dealsPerPage = 5;
-
 
   useEffect(() => {
     setLoading(true);
@@ -42,14 +40,20 @@ export default function Home() {
     user.deals.map((deal) => ({ ...deal, rep: user.name }))
   );
 
-  const pagedDeals = allDeals.slice(
-    dealPage * dealsPerPage,
-    dealPage * dealsPerPage + dealsPerPage
-  );
-
 
   return (
     <div className="grid grid-cols grid-rows gap-4">
+      {/* Asks AI */}
+      <div className="col-span-3 row-auto">
+        <Input
+          placeholder="Asks Me Anything"
+          value={inputAI}
+          onChange={(e) => {
+            setInputAI(e.target.value);
+          }}
+        />
+      </div>
+
       {/* Metrics */}
       <div>
         <CardMetrics title={"Total Sales"} value={totalSales} />
@@ -64,7 +68,7 @@ export default function Home() {
       {/* Search */}
       <div className="col-span-3 row-auto">
         <Input
-          placeholder="Search"
+          placeholder="Search By Sales Rep"
           value={input}
           onChange={(e) => {
             setInput(e.target.value);
@@ -88,13 +92,10 @@ export default function Home() {
       </div>
 
       {/* Deals Table */}
-      <div className="col-span-3 row-start-4">
+      <div className="col-span-3 row-start">
         <SalesDealsList
-          pagedDeals={pagedDeals}
           allDeals={allDeals}
-          dealPage={dealPage}
-          dealsPerPage={dealsPerPage}
-          setDealPage={setDealPage}
+          users={users}
         />
       </div>
 
