@@ -14,7 +14,7 @@ def get_sales_reps(
     ):
     return load_sales_rep_data(search, limit, offset)
 
-@router.post("/api/ai")
+@router.post("/api/ai", response_model=StandardResponse)
 async def ai_endpoint(request: AIRequest):
     result = chat_with_ai(request.prompt)
     return {"response": result}
