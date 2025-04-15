@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchSalesReps } from "../features/salesReps/SalesService";
+import { postChatCompletion } from "../features/aiChats/AiChatService";
 import { Input } from "@/src/components/ui/input";
 import { useDebounce } from "use-debounce";
 import { ModeToggle } from "@/src/components/mode-toggle"
@@ -15,6 +16,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [inputAI, setInputAI] = useState("");
   const [debouncedSearch] = useDebounce(input, 500);
+  const [aiResponse, setAiResponse] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -40,19 +42,44 @@ export default function Home() {
     user.deals.map((deal) => ({ ...deal, rep: user.name }))
   );
 
+  const handleAIInputKeyDown = (e) => {
+    if (e.key === "Enter" && inputAI.trim() !== "") {
+      setInputAI("")
+      postChatCompletion(inputAI)
+        .then((response) => {
+          setAiResponse(response);
+        })
+        .catch((error) => {
+          setAiResponse("Error occurred while fetching response.");
+          console.error(error);
+        });
+    }
+  };
+
 
   return (
     <div className="grid grid-cols grid-rows gap-4">
       {/* Asks AI */}
       <div className="col-span-3 row-auto">
         <Input
-          placeholder="Asks Me Anything"
+          placeholder="Ask Me Anything"
           value={inputAI}
           onChange={(e) => {
-            setInputAI(e.target.value);
+            setInputAI(e.target.value); 
           }}
+          onKeyDown={handleAIInputKeyDown}
         />
+         <p className="text-sm text-muted-foreground mt-2">Press <kbd className="px-1 py-0.5 border rounded">Enter</kbd> to send</p>
       </div>
+
+      {/* AI Response */}
+      {aiResponse && (
+        <div className="col-span-3 row-auto">
+          <div className="p-4 border border-gray-300 rounded-md">
+            <p>{aiResponse}</p>
+          </div>
+        </div>
+      )}
 
       {/* Metrics */}
       <div>
