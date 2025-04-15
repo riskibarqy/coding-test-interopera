@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Request, Query
+from fastapi import APIRouter, Query
 from app.services.sales_rep_service import load_sales_rep_data
+from app.services.ai_chat_service import chat_with_ai
 from app.models.base import StandardResponse
+from app.models.ai import AIRequest
 
 router = APIRouter()
 
@@ -13,10 +15,6 @@ def get_sales_reps(
     return load_sales_rep_data(search, limit, offset)
 
 @router.post("/api/ai")
-async def ai_endpoint(request: Request):
-    """
-    Placeholder AI endpoint.
-    """
-    body = await request.json()
-    question = body.get("question", "")
-    return {"answer": f"This is a placeholder answer to your question: {question}"}
+async def ai_endpoint(request: AIRequest):
+    result = chat_with_ai(request.prompt)
+    return {"response": result}
